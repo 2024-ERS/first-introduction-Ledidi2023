@@ -49,9 +49,10 @@ Read the FactCockleSize table with read_csv, which reads it as tibble
 
 ```{r}
 FactCockleSize <- readr::read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSpormjGiM4uWMTIZYm9Upt5j1Ige_Wu9CrhGGdvjXwxmHP2R6S7JDyEmiGTn3fXihl5s5yBn_sdo8h/pub?gid=1538766002&single=true&output=csv")
+dply::filter(CockleObs_ID=1531,CockleObs_ID=469)
+dplyr::mutate(year=factor(year))
 print(FactCockleSize)
-names(FactCockleSize)
-nrow(FactCockleSize)
+
 ```
 
 Plot with ggplot the relation between cockle thickness (thickness_mm, as
@@ -65,26 +66,33 @@ ggplot2::ggplot(data=FactCockleSize,
 ```
 # there is a big outlier, likely a data entry mistake,remove it
 ```{r}
-FactCockleSize2<-FactCockleSize |>dplyr::filter(thickness_mm<500)
+FactCockleSize2<-FactCockleSize |>dplyr::filter(thickness_mm<500) |>
+  mutate(year=factor(year))
+
 ggplot2::ggplot(data=FactCockleSize2,
                 mapping=aes(x=length_mm,y=thickness_mm))+ 
   geom_point()
 ```
 
 Further explore the plot with a regression line through all the data
-
 ```{r}
+ggplot2::ggplot(data=FactCockleSize2,
+                mapping=aes(x=length_mm,y=thickness_mm))+ 
+  geom_point(aes(col=year))+
+  geom_smooth(method="lm")
 ```
 
 Make same plot but showing a separate regression line per year
 
-```{r}
+mode_lm<-(thickness_mm, data=FactCockleSize)
+summary(model_lm)
 # color the points by year, but plot one regression line
 ```
 
 Make a panel plot where with each year is shown as a separate graph
 
 ```{r}
+-0.353+0.669*20
 ```
 
 We conclude from this that: \* there were two important outliers in the
